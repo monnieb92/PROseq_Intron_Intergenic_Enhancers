@@ -1,5 +1,5 @@
 # eRNA peak calling 
-
+This is performed for each timepoint and replicate. 
 ## Call peaks using macs2 
 
 ```{bash}
