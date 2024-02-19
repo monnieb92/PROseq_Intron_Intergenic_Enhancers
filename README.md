@@ -115,7 +115,7 @@ write_tsv(AllCounts_filtered_bed, "10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummi
 ```
 
 ## Differential analysis using NRSA normalization factors and DESeq2 
-### use the counts table from both strands to perform the differential anslysis 
+### use the counts table from both strands to perform the differential anslysis (all counts)
 
 ```{r}
 countData1h <- AllCounts_filtered[,c(41:43,50:52)]
