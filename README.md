@@ -91,7 +91,7 @@ featureCounts -F SAF -T 18 -s 0 -O -a 10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsu
 ```
 
 ## Filter for peaks with bidirectional transcription 
-### Counts tables longers filtered > 0.001 & _rev !=0
+### Counts tables filtered > 0.001 & _rev !=0
 ```{r}
 
 counts_strand <- read.table("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-MB-FeatureCounts/10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.filtered.outsideTSS750.plusminus150_SubreadCounts.forwardstrand.possaf.txt", header = TRUE)
