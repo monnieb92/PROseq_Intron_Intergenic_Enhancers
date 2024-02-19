@@ -1,0 +1,274 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+```{r}
+library(tidyverse)
+library(DESeq2)
+library("DiffBind")
+```
+# Upload annoated narrowpeak files from PROseq and filter for introns and intergenic regions and any peaks within 500bp of a start site 
+## plus minus 150bp 
+
+```{r}
+###T0hA
+T0hA <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-0hA-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T0hA)[1] <- "PeakID" 
+T0hA_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-0hA-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T0hA_macs) <- Macs2colnames
+
+T0hA_int <- subset(T0hA, grepl("(intron|intergenic)", tolower(Annotation))) %>%
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T0hA_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T0hA_int,"10767-MB-0hA-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T0hB
+T0hB <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-0hB-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T0hB)[1] <- "PeakID" 
+T0hB_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-0hB-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T0hB_macs) <- Macs2colnames
+
+T0hB_int <- subset(T0hB, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T0hB_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T0hB_int,"10767-MB-0hB-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T0hC
+T0hC <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-0hC-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T0hC)[1] <- "PeakID" 
+T0hC_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-0hC-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T0hC_macs) <- Macs2colnames
+
+T0hC_int <- subset(T0hC, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T0hC_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T0hC_int,"10767-MB-0hC-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T15mA
+T15mA <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-15mA-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T15mA)[1] <- "PeakID" 
+T15mA_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-15mA-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T15mA_macs) <- Macs2colnames
+
+T15mA_int <- subset(T15mA, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T15mA_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T15mA_int,"10767-MB-15mA-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T15mB
+T15mB <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-15mB-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T15mB)[1] <- "PeakID" 
+T15mB_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-15mB-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T15mB_macs) <- Macs2colnames
+
+T15mB_int <- subset(T15mB, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T15mB_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+  
+write_tsv(T15mB_int,"10767-MB-15mB-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T15mC
+T15mC <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-15mC-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T15mC)[1] <- "PeakID" 
+T15mC_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-15mC-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T15mC_macs) <- Macs2colnames
+
+T15mC_int <- subset(T15mC, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 500 | `Distance to TSS` < -500) %>%
+  left_join(T15mC_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T15mC_int,"10767-MB-15mC-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T30mA
+T30mA <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-30mA-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T30mA)[1] <- "PeakID" 
+T30mA_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-30mA-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T30mA_macs) <- Macs2colnames
+
+T30mA_int <- subset(T30mA, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T30mA_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T30mA_int,"10767-MB-30mA-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T30mB
+T30mB <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-30mB-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T30mB)[1] <- "PeakID" 
+T30mB_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-30mB-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T30mB_macs) <- Macs2colnames
+
+T30mB_int <- subset(T30mB, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T30mB_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T30mB_int,"10767-MB-30mB-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T30mC
+T30mC <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-30mC-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T30mC)[1] <- "PeakID" 
+T30mC_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-30mC-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T30mC_macs) <- Macs2colnames
+
+T30mC_int <- subset(T30mC, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T30mC_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T30mC_int,"10767-MB-30mC-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T1hA
+T1hA  <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-1hA-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T1hA)[1] <- "PeakID" 
+T1hA_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-1hA-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T1hA_macs) <- Macs2colnames
+
+T1hA_int <- subset(T1hA, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T1hA_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T1hA_int,"10767-MB-1hA-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T1hB
+T1hB  <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-1hB-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T1hB)[1] <- "PeakID" 
+T1hB_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-1hB-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T1hB_macs) <- Macs2colnames
+
+T1hB_int <- subset(T1hB, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T1hB_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T1hB_int,"10767-MB-1hB-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+###T1hC
+T1hC  <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-1hC-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
+names(T1hC)[1] <- "PeakID" 
+T1hC_macs <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-MB-1hC-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak", col_names = FALSE)
+Macs2colnames <- c("Chrom","Start", "End", "PeakID", "score", "Strand", "signalValue", "pValue", "qValue", "peak")
+colnames(T1hC_macs) <- Macs2colnames
+
+T1hC_int <- subset(T1hC, grepl("(intron|intergenic)", tolower(Annotation)) ) %>% 
+  dplyr::filter(`Distance to TSS` > 750 | `Distance to TSS` < -750) %>%
+  left_join(T1hC_macs, by = "PeakID", suffix = c("_anno", "_macs2")) %>% 
+  dplyr::select(Chrom, Start_macs2, End_macs2,PeakID, "Peak Score", Strand_macs2) %>%
+  dplyr::mutate(Start_macs2 = Start_macs2 - 150, 
+                End_macs2 = End_macs2 + 150) %>%
+  as.data.frame()
+write_tsv(T1hC_int,"10767-MB-1hC-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.outsideTSS750.plusminus150.bothstrand.txt", col_names = FALSE)
+
+
+```
+
+## Peaks not near TSS and only in intron or intergenic regions 
+## Counts tables longers filtered > 0.001 & _rev !=0
+### Upload the FeatureCounts 
+```{r}
+
+counts_strand <- read.table("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-MB-FeatureCounts/10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.filtered.outsideTSS750.plusminus150_SubreadCounts.forwardstrand.possaf.txt", header = TRUE)
+CountColumns <- c("PeakID","Chrom","Start","End","Strand","Length","minusdT_A","minusdT_B","minusdT_C","plusdT15m_A","plusdT15m_B","plusdT15m_C","plusdT30m_A","plusdT30m_B","plusdT30m_C","plusdT1h_A","plusdT1h_B","plusdT1h_C")
+colnames(counts_strand) <- CountColumns
+counts_reverse <- read.table("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-MB-FeatureCounts/10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.filtered.outsideTSS750.plusminus150_SubreadCounts.reversestrand.possaf.txt", header = TRUE)
+colnames(counts_reverse) <- CountColumns
+counts_total <- read.table("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-MB-FeatureCounts/10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.filtered.outsideTSS750.plusminus150_SubreadCounts.allcounts.possaf.txt", header = TRUE)
+colnames(counts_total) <- CountColumns
+AllCounts <- counts_strand %>% left_join(counts_reverse, by = "PeakID", suffix=c("_fwd", "_rev")) %>%
+  left_join(counts_total, by = "PeakID", suffix=c("_rev", "_both"))
+
+
+AllCounts_filtered <- AllCounts %>%
+  dplyr::filter((`minusdT_A_rev` != 0 ) & (`minusdT_A_fwd`/`minusdT_A_rev`) > 0.001 & (`minusdT_B_rev` != 0 ) & (`minusdT_B_fwd`/`minusdT_B_rev`) > 0.001 & (`minusdT_C_rev` != 0 ) & (`minusdT_C_fwd`/`minusdT_C_rev`) > 0.001 |  (`plusdT1h_A_rev` != 0 ) & (`plusdT1h_A_fwd`/`plusdT1h_A_rev`) > 0.001 & (`plusdT1h_B_rev` != 0 ) & (`plusdT1h_B_fwd`/`plusdT1h_B_rev`) > 0.001  & (`plusdT1h_C_rev` != 0 ) &  (`plusdT1h_C_fwd`/`plusdT1h_C_rev`) > 0.001 ) %>%
+  glimpse()
+
+AllCounts_filtered_bed <- AllCounts_filtered %>%
+  dplyr::select("Chrom", "Start", "End", "PeakID","Length","Strand")
+
+write_tsv(AllCounts_filtered_bed, "10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummits_peaks.intron.intergenic.filtered.outsideTSS750.plusminus150.greaterthan0.001.bed", col_names = FALSE)
+```
+
+### DESEQ2 longer 
+
+```{r}
+countData1h <- AllCounts_filtered[,c(41:43,50:52)]
+
+colData_1h <- data.frame(condition = factor(c("DMSO", "DMSO","DMSO", "dT1h","dT1h","dT1h"), levels = c("DMSO", "dT1h")), sample = c("minusdT_A","minusdT_B","minusdT_C", "dT1h_A","dT1h_B","dT1h_C"))
+
+dds1h <- DESeqDataSetFromMatrix(countData = countData1h, colData = colData_1h, design = ~condition)
+## NRSA size factors 
+sizeFactors(dds1h) <- c(1/0.721057608621947,1/0.994705249048991,1/1.288104653729,1/1.05075548011527,1/0.910653829570098,1/1.12421859250555)
+#dds <- DESeq(dds)
+dds1h <- estimateDispersions(dds1h)
+dds1h <- nbinomWaldTest(dds1h)
+
+##Create PCA plot of normalized data
+
+vsd<-varianceStabilizingTransformation(dds1h)
+z <- plotPCA(vsd, intgroup=c("condition"))
+nudge <- position_nudge(y = 1)
+z + geom_text(aes(label = vsd$sample), position = nudge, size=2)
+ 
+normdata <- counts(dds1h,normalized=TRUE)
+colnames(normdata)<-paste("norm",c("minusdT_A","minusdT_B","minusdT_C", "dT1h_A","dT1h_B","dT1h_C"),sep="_")
+ 
+result_eRNA_1h <- results(dds1h,contrast=c("condition","dT1h","DMSO"))
+result_eRNA_1h_table <- cbind(AllCounts_filtered[,c(1:5)],countData1h,normdata,result_eRNA_1h)
+glimpse(result_eRNA_1h_table)
+write_tsv(result_eRNA_1h_table,"10767-MB-result_eRNA_1h_table.includeintron.intergentic.excludenearTSS750.plusminus150.filtered0.001.txt")
+#create a MA plot of differential changes 
+plotMA(result_eRNA_1h, ylim=c(-7.5,5),main="eRNA",cex.lab=1.75, cex.axis=1.75 ,cex.main=1.75, alpha=0.05)
+
+```
