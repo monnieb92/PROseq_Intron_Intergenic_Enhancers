@@ -115,6 +115,7 @@ write_tsv(AllCounts_filtered_bed, "10767-MB-AllPeaks-PS.q0.01.fBAM.gmm.callsummi
 ```
 
 ## Differential analysis using NRSA normalization factors and DESeq2 
+### use the counts table from both strands to perform the differential anslysis 
 
 ```{r}
 countData1h <- AllCounts_filtered[,c(41:43,50:52)]
@@ -122,7 +123,7 @@ countData1h <- AllCounts_filtered[,c(41:43,50:52)]
 colData_1h <- data.frame(condition = factor(c("DMSO", "DMSO","DMSO", "dT1h","dT1h","dT1h"), levels = c("DMSO", "dT1h")), sample = c("minusdT_A","minusdT_B","minusdT_C", "dT1h_A","dT1h_B","dT1h_C"))
 
 dds1h <- DESeqDataSetFromMatrix(countData = countData1h, colData = colData_1h, design = ~condition)
-
+## these size factors are output from NRSA
 sizeFactors(dds1h) <- c(1/0.721057608621947,1/0.994705249048991,1/1.288104653729,1/1.05075548011527,1/0.910653829570098,1/1.12421859250555)
 #dds <- DESeq(dds)
 dds1h <- estimateDispersions(dds1h)
