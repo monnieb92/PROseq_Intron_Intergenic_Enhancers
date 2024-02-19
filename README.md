@@ -1,4 +1,4 @@
-# Enhancer peak calling 
+# eRNA peak calling 
 
 ## Call peaks using macs2 
 
