@@ -11,8 +11,8 @@ $MACS2 callpeak -t ${BAM}/10767-MB-${ids[$i]}.75.adap.trail.15bp.revcomp.mm39.F4
 annotatePeaks.pl $OUTPUT/10767-MB-${times[$i]}-PS.q0.01.fBAM.gmm.callsummits_peaks.narrowPeak $FASTA -size 200 -strand both -gtf $ANNO > $OUTPUT2/10767-MB-${times[$i]}-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt
 ```
 
-## Filter for only peaks in introns and intergenic regions using R
-
+## Filter for only peaks in introns and intergenic regions and not within 750bp of TSS using R
+### added 150bp to each peak (this will merge peaks that might very close together)
 ```{r}
 T0hA <- read_delim("/Volumes/Mbomber_7_14TB/10767-MB-MEL_Mtg16_PROSeq/10767-macs2.q0.01/10767-PS-annotations/10767-MB-0hA-PS.q0.01.fBAM.gmm.callsummits_peaks.annotated.bothstrand.txt")
 names(T0hA)[1] <- "PeakID" 
